@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>员工账号管理</title>
+</head>
+<body>
+    <h3>员工账号列表 <a href=" {% url 'add_staff' %}">新增员工</a ></h3>
+    <table border="1" cellpadding="6" style="border-collapse:collapse;width:80%;margin:20px auto;">
+        <tr>
+            <th>姓名</th>
+            <th>工号</th>
+            <th>操作</th>
+        </tr>
+        {% for s in staff_list %}
+        <tr>
+            <td>{{ s.first_name }}</td>
+            <td>{{ s.username }}</td>
+            <td>
+                <a href="{% url 'edit_pwd' s.id %}">修改密码</a >
+                <a href="{% url 'del_staff' s.id %}" onclick="return confirm('确定删除该员工吗？')" style="color:red;margin-left:10px;">删除</a >
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <div style="text-align:center;">
+        <a href="{% url 'index' %}">返回仓库首页</a >
+    </div>
+</body>
+</html>

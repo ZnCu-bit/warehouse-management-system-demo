@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>修改员工密码</title>
+</head>
+<body>
+    <h3 style="text-align:center;">重置员工登录密码</h3>
+    <form method="post" style="width:300px;margin:50px auto;">
+        {% csrf_token %}
+        <p>新密码：<input type="password" name="new_pwd" required style="width:100%;padding:6px;"></p >
+        <p><input type="submit" value="确认修改" style="width:100%;height:36px;"></p >
+    </form>
+    <div style="text-align:center;">
+        <a href=" {% url 'staff_manage' %}">返回员工列表</a >
+    </div>
+</body>
+</html>
