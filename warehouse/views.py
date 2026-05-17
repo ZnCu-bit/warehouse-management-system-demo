@@ -86,12 +86,14 @@ def edit_pwd(request, uid):
     return render(request, 'warehouse/edit_pwd.html')
 
 # 仓库首页，显示所有商品
+@login_required(login_url='user_login')
 def index(request):
     goods_list = Goods.objects.all()
     is_admin = request.user.is_superuser
     return render(request, 'warehouse/index.html', {'goods_list': goods_list})
 
 # 商品入库
+@login_required(login_url='user_login')
 def stock_in(request):
     if request.method == 'POST':
         gid = request.POST.get('gid')
@@ -110,6 +112,7 @@ def stock_in(request):
     return redirect('/')
 
 # 商品出库
+@login_required(login_url='user_login')
 def stock_out(request):
     if request.method == 'POST':
         gid = request.POST.get('gid')
@@ -121,7 +124,17 @@ def stock_out(request):
             goods.save()
     return redirect('/')
 
-# 删除商品
+@login_required(login_url='user_login')
 def delete_goods(request, gid):
-    Goods.objects.filter(gid=gid).delete()
-    return redirect('/')
+    # 只允许 POST 请求执行删除，防止恶意 GET 请求
+    if request.method == 'POST':
+        goods = Goods.objects.filter(gid=gid)
+        if goods.exists():
+            goods.delete()
+            # 删除成功，跳转到商品列表页（如果你的商品列表路由不是 '/'，就改成对应的路径）
+            return redirect('goods_list')
+        else:
+            # 商品不存在，跳转到列表页并提示
+            return redirect('goods_list')
+    # 不允许 GET 请求，直接返回 405 或跳转
+    return redirect('goods_list')
